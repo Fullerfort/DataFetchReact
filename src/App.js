@@ -24,19 +24,14 @@ const App = () => {
     setLoading(false);
   }, []);
 
-  const indexOfLastPost = currentPage * postsPerPage;
-  const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const currentPosts = screens.slice(indexOfFirstPost, indexOfLastPost);
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  // const indexOfLastPost = currentPage * postsPerPage;
+  // const indexOfFirstPost = indexOfLastPost - postsPerPage;
+  // const currentPosts = screens.slice(indexOfFirstPost, indexOfLastPost);
+  // const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
     <div className="App">
-      <Test screens={currentPosts} loading={loading} />
-      <Pagination
-        postsPerPage={postsPerPage}
-        totalPosts={screens.length}
-        paginate={paginate}
-      />
+      <Test screens={screens} loading={loading} />
     </div>
   );
 };

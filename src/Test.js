@@ -1,18 +1,49 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./index.css";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
+import { 
+  Table, 
+  TableFooter, 
+  TableBody, 
+  TableCell, 
+  TableContainer, 
+  TableHead, 
+  TableRow, 
+  TablePagination 
+} from "@mui/material";
 import Paper from "@mui/material/Paper";
 import Container from "@mui/material/Container";
 
-const Test = ({ screens, loading }) => {
+const Test = (props) => {
+  const { screens, loading } = props;
+
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [currentScreens, setCurrentScreens] = useState([]);
+
+  var screensFilter = screens.filter(function(screen){
+    return (screens.indexOf(screen) >= (page * rowsPerPage) && screens.indexOf(screen) < (rowsPerPage * (page + 1)));
+  });
+  
+  useEffect(() => {
+    setCurrentScreens(screensFilter);
+  }, [screens]);
+
+  useEffect(() => {
+    setCurrentScreens(screensFilter);
+  }, [page, rowsPerPage]);
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(event.target.value);
+  };
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
   if (loading) {
     return <h2>Loading...</h2>;
   }
+
   return (
     // <>
     //   <div>
@@ -65,10 +96,10 @@ const Test = ({ screens, loading }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {screens.map((screen) => (
+            {currentScreens.map((screen) => (
               <TableRow key={screen.id}>
                 <TableCell component="th" scope="row">
-                  <img src={screen.banner} width="300" />
+                  {screen.banner != undefined && (<img src={screen.banner} width="300" />)}
                 </TableCell>
                 <TableCell align="center">{screen.name}</TableCell>
                 <TableCell align="center">{screen.type}</TableCell>
@@ -81,6 +112,20 @@ const Test = ({ screens, loading }) => {
               </TableRow>
             ))}
           </TableBody>
+
+          <TableFooter>
+            <TableRow>
+              <TablePagination
+                rowsPerPageOptions={[10, 25]}
+                count={screens.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              >
+              </TablePagination>
+            </TableRow>
+          </TableFooter>
         </Table>
       </TableContainer>
     </Container>
